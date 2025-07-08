@@ -11,7 +11,7 @@ exports.getLead = async (req, res) => {
             // console.log("📦 Cache hit:", cacheKey);
             return res.json(cached);
         }
-        const data = await aimfox.get(`/leads/${req.params.lead_id}`);
+        const data = await aimfox.get(`/leads/${parseInt(req.params.lead_id)}`);
 
         cache.set(cacheKey, data);
         // console.log("📡 Cache miss - data cached:", cacheKey);
