@@ -22,6 +22,34 @@ exports.getAllTemplates = async (req, res) => {
     }
 };
 
+exports.getTemplateById = async (req, res) => {
+    const { template_id } = req.params;
+
+    try {
+        const cacheKey = generateCacheKey('getTemplateById');
+        const cached = cache.get(cacheKey);
+        if (cached) {
+            // console.log("📦 Cache hit:", cacheKey);
+            return res.json(cached);
+        }
+
+        const response = await aimfox.get(`/templates/${template_id}`);        
+        if (!response?.template) {
+            return res.status(404).json({ status: "error", message: "Template not found" });
+        }
+
+        cache.set(cacheKey, response);
+        // console.log("📡 Cache miss - data cached:", cacheKey);
+
+        res.json({ status: "ok", template: response.template });
+    } catch (err) {                
+        res.status(500).json({
+            status: "error",
+            message: err.message || "Failed to fetch template"
+        });
+    }
+};
+
 exports.createTemplate = async (req, res) => {
     try {
         const data = await aimfox.post("/templates", req.body);

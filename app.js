@@ -11,7 +11,7 @@ const app = express();
 app.use(helmet()); // Sets secure HTTP headers
 
 app.use(cors({
-    origin: "https://aimfox-ui.netlify.app", // restrict to your frontend
+    origin: process.env.CLIENT_URL,
     optionsSuccessStatus: 200,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true
