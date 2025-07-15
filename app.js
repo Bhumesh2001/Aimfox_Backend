@@ -3,9 +3,14 @@ const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const dotenv = require("dotenv");
+const logRequestResponse = require("./middlewares/loggerMiddleware");
+const logger = require('./utils/logger');
 
 dotenv.config();
 const app = express();
+
+// 🧠 Global Middlewares
+app.use(logRequestResponse);
 
 // ----------- 🔒 Global Security Middlewares ------------
 app.use(helmet()); // Sets secure HTTP headers
@@ -51,7 +56,7 @@ app.use("/api/notes", require("./routes/notes.routes"));
 
 // ----------- 🔥 Global Error Handler ------------
 app.use((err, req, res, next) => {
-    console.error("Unhandled Error:", err);
+    logger.error(`❌ Unhandled Error: ${err.stack}`);
     res.status(500).json({ error: "Internal Server Error" });
 });
 
