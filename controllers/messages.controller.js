@@ -31,7 +31,7 @@ exports.getConversation = async (req, res) => {
             // console.log("📦 Cache hit:", cacheKey);
             return res.json(cached);
         }
-        const { account_id, conversation_urn } = req.params;
+        const { account_id, conversation_urn } = req.params;        
         const data = await aimfox.get(`/accounts/${parseInt(account_id)}/conversations/${conversation_urn}`);
 
         cache.set(cacheKey, data);
@@ -39,6 +39,7 @@ exports.getConversation = async (req, res) => {
 
         res.json(data);
     } catch (err) {
+        console.log(err.message);
         res.status(500).json({ error: err.message });
     }
 };
