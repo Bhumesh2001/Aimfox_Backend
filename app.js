@@ -53,6 +53,7 @@ app.use("/api/messages", require("./routes/messages.routes"));
 app.use("/api/labels", require("./routes/labels.routes"));
 app.use("/api/templates", require("./routes/templates.routes"));
 app.use("/api/notes", require("./routes/notes.routes"));
+app.use("/api/generate-reply", require('./routes/ai.routes'));
 
 // ----------- 🔥 Global Error Handler ------------
 app.use((err, req, res, next) => {
