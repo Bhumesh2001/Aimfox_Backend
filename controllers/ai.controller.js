@@ -5,15 +5,21 @@ const { API_TYPE = "OPENAI" } = process.env;
 
 exports.generateMessage = async (req, res) => {
     try {
-        const { lastMessage } = req.body;
-        if (!lastMessage || typeof lastMessage !== "string") {
-            return res.status(400).json({ error: "Invalid or missing 'lastMessage'" });
+        if (
+            !req.body ||
+            typeof req.body !== "object" ||
+            Array.isArray(req.body) ||
+            Object.keys(req.body).length === 0
+        ) {
+            return res.status(400).json({ error: "Valid object data is required!" });
         }
 
         const generator =
-            API_TYPE.toUpperCase() === "GEMINI" ? generateGeminiReply : generateOpenAiReply;
+            API_TYPE.toUpperCase() === "GEMINI"
+                ? generateGeminiReply
+                : generateOpenAiReply;
 
-        const rawReply = await generator({ lastMessage });
+        const rawReply = await generator(req.body);
         const cleanedReply = cleanReplyText(rawReply);
 
         return res.json({ reply: cleanedReply });
